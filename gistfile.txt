@@ -1,0 +1,6 @@
+set title "Saffir simpson data over time"
+set xlabel "YEAR"
+set ylabel "SAFFIR-SIMPSON DAYS"
+set xrange [1851:2014]
+set yrange [0:10000]
+plot "output.txt" title "" with lines
