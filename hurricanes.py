@@ -40,33 +40,39 @@ def ssday(input):
         a+=rank(x)
     return a/4.0
 
-if not os.path.isfile(sys.argv[1]):
-    print "Error: file not found"
-    sys.exit(1)
+def main():
+    if not os.path.isfile(sys.argv[1]):
+        print("Error: file not found")
+        sys.exit(1)
 
-f = open(sys.argv[1],'rt')
-out = open("output.txt",'w')
+    f = open(sys.argv[1],'rt')
+    out = open("output.txt",'w')
 
-times=("0000","0600","1200","1800")
+    times=("0000","0600","1200","1800")
 
-stormlist = []
-lines = generator(f)
+    stormlist = []
+    lines = generator(f)
 
-#Use the generator to add wind data to storm list
-for x in lines:
-    if len(x)==4:
-        stormlist.append(Storm(x[0],int(x[0][4:8])))
-    else:
-        if x[1] in times:
-            stormlist[len(stormlist)-1].addwind(int(x[6]))
+    #Use the generator to add wind data to storm list
+    for x in lines:
+        if len(x)==4:
+            stormlist.append(Storm(x[0],int(x[0][4:8])))
+        else:
+            if x[1] in times:
+                stormlist[len(stormlist)-1].addwind(int(x[6]))
 
-simpsondata = {}
-#Generate dictionary of saffir simpson totals
-for storm in stormlist:
-    if storm.year in simpsondata:
-        simpsondata[storm.year]+=storm.saffir_simpson_day()
-    else:
-        simpsondata[storm.year]=storm.saffir_simpson_day()
+    simpsondata = {}
+    #Generate dictionary of saffir simpson totals
+    for storm in stormlist:
+        if storm.year in simpsondata:
+            simpsondata[storm.year]+=storm.saffir_simpson_day()
+            print(storm.year,simpsondata[storm.year])
+        else:
+            simpsondata[storm.year]=storm.saffir_simpson_day()
+            print(storm.year,simpsondata[storm.year])
 
-for k,v in simpsondata.iteritems():
-    out.write("{}\t{}\n".format(k,v))
+    for k,v in simpsondata.items():
+        out.write("{}\t{}\n".format(k,v))
+
+if __name__=='__main__':
+    main()
